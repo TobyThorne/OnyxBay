@@ -120,7 +120,7 @@ var/global/list/robot_footstep_sounds = list(
 		/mob/living/silicon/robot/proc/ResetSecurityCodes
 	)
 
-/mob/living/silicon/robot/New(loc,unfinished = 0)
+/mob/living/silicon/robot/Initialize(mapload, loc, unfinished = 0)
 	spark_system = new /datum/effect/effect/system/spark_spread()
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
@@ -146,7 +146,7 @@ var/global/list/robot_footstep_sounds = list(
 		if(wires.IsIndexCut(BORG_WIRE_CAMERA))
 			camera.status = 0
 
-	..() // Laws, among other things, are initialized in parent New()
+	. = ..()
 	init()
 	initialize_components()
 	//if(!unfinished)
@@ -176,8 +176,6 @@ var/global/list/robot_footstep_sounds = list(
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 
-/mob/living/silicon/robot/Initialize()
-	. = ..()
 	AddMovementHandler(/datum/movement_handler/robot/use_power, /datum/movement_handler/mob/space)
 
 /mob/living/silicon/robot/proc/recalculate_synth_capacities()

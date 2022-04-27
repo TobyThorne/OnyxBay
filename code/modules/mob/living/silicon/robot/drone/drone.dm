@@ -62,9 +62,8 @@ var/list/mob_hat_cache = list()
 
 	holder_type = /obj/item/holder/drone
 
-/mob/living/silicon/robot/drone/New()
-	..()
-
+/mob/living/silicon/robot/drone/Initialize()
+	. = ..()
 	register_signal(src, SIGNAL_MOVED, /mob/living/silicon/robot/drone/proc/on_moved)
 
 /mob/living/silicon/robot/drone/Destroy()
@@ -124,9 +123,8 @@ var/list/mob_hat_cache = list()
 	can_pull_size = ITEM_SIZE_NO_CONTAINER
 	can_pull_mobs = MOB_PULL_SAME
 
-/mob/living/silicon/robot/drone/New()
-
-	..()
+/mob/living/silicon/robot/drone/Initialize()
+	. = ..()
 
 	verbs += /mob/living/proc/hide
 	remove_language("Robot Talk")

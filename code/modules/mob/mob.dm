@@ -1,4 +1,5 @@
 /mob/Destroy()//This makes sure that mobs with clients/keys are not just deleted from the game.
+	death(TRUE) // A dirty move it is, it's still safer to actually kill the mob (or at least make sure it's dead) before deleting it.
 	STOP_PROCESSING(SSmobs, src)
 	GLOB.dead_mob_list_ -= src
 	GLOB.living_mob_list_ -= src

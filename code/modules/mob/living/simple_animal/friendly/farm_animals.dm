@@ -143,7 +143,7 @@
 
 /mob/living/simple_animal/cow/Initialize()
 	. = ..()
-	udder = new milktype(50, src)
+	udder = new(50, src)
 
 /mob/living/simple_animal/cow/attackby(obj/item/O, mob/user)
 	var/obj/item/reagent_containers/glass/G = O

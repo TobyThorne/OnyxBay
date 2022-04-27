@@ -75,8 +75,8 @@ be able to influence the host through various commands.
 	A.examine(src)
 
 
-/mob/living/parasite/meme/New(mob/living/carbon/human/host)
-	..()
+/mob/living/parasite/meme/Initialize(mapload, mob/living/carbon/human/host)
+	. = ..()
 
 	if(!istype(host)) return
 

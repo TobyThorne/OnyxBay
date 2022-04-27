@@ -21,8 +21,7 @@
 	var/list/stance_limbs
 	var/list/grasp_limbs
 
-/mob/living/carbon/human/New(new_loc, new_species = null)
-
+/mob/living/carbon/human/Initialize(mapload, new_loc, new_species = null)
 	grasp_limbs = list()
 	stance_limbs = list()
 
@@ -56,7 +55,7 @@
 	hud_list[GLAND_HUD]        = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 
 	GLOB.human_mob_list |= src
-	..()
+	. = ..()
 
 	if(dna)
 		dna.ready_dna(src)

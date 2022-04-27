@@ -82,7 +82,7 @@
 
 	give_ghost_proc_at_initialize = FALSE
 
-/mob/living/silicon/pai/New(obj/item/device/paicard)
+/mob/living/silicon/pai/Initialize(mapload, obj/item/device/paicard)
 	status_flags |= NO_ANTAG
 	src.loc = paicard
 	card = paicard
@@ -94,7 +94,7 @@
 	verbs += /mob/living/silicon/pai/proc/choose_chassis
 	verbs += /mob/living/silicon/pai/proc/choose_verbs
 
-	..()
+	. = ..(mapload)
 
 	if(card)
 		if(!card.radio)

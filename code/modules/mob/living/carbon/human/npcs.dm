@@ -1,5 +1,5 @@
-/mob/living/carbon/human/monkey/punpun/New()
-	..()
+/mob/living/carbon/human/monkey/punpun/Initialize()
+	. = ..()
 	name = "Pun Pun"
 	real_name = name
 	var/obj/item/clothing/C
@@ -30,11 +30,9 @@
 		C.has_sensor  = SUIT_LOCKED_SENSORS
 		C.sensor_mode = SUIT_SENSOR_OFF
 
-/mob/living/carbon/human/blank/New(new_loc)
-	..(new_loc, "Vat-Grown Human")
+/mob/living/carbon/human/blank/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, "Vat-Grown Human")
 
-/mob/living/carbon/human/blank/Initialize()
-	. = ..()
 	var/number = "[pick(possible_changeling_IDs)]-[rand(1,30)]"
 	fully_replace_character_name("Subject [number]")
 	var/decl/hierarchy/outfit/outfit = outfit_by_type(/decl/hierarchy/outfit/blank_subject)

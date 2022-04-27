@@ -55,9 +55,10 @@ var/global/list/robot_modules = list(
 	var/list/original_languages = list()
 	var/list/added_networks = list()
 	var/appointed_huds = list("Disable", "Security", "Medical")
-/obj/item/robot_module/New(mob/living/silicon/robot/R)
-	..()
-	if (!istype(R))
+
+/obj/item/robot_module/Initialize(mapload, mob/living/silicon/robot/R)
+	. = ..(mapload)
+	if(!istype(R))
 		return
 
 	R.module = src
@@ -199,7 +200,9 @@ var/global/list/robot_modules = list(
 		"Doot" = new /datum/robot_hull/flying/eyebot_standard
 	)
 
-/obj/item/robot_module/standard/New()
+/obj/item/robot_module/standard/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/wrench(src)
 	src.modules += new /obj/item/melee/baton/robot(src)
@@ -222,8 +225,6 @@ var/global/list/robot_modules = list(
 	B.synths = list(medicine)
 	modules += B
 
-	..()
-
 /obj/item/robot_module/standard/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
 	var/obj/item/device/lightreplacer/LR = locate() in src.modules
@@ -236,8 +237,8 @@ var/global/list/robot_modules = list(
 	subsystems = list(/datum/nano_module/crew_monitor)
 	can_be_pushed = 0
 
-/obj/item/robot_module/medical/New()
-	..()
+/obj/item/robot_module/medical/Initialize()
+	. = ..()
 	supported_upgrades += list(/obj/item/borg/upgrade/visor/thermal,/obj/item/borg/upgrade/visor/meson, /obj/item/borg/upgrade/bb_printer)
 
 /obj/item/robot_module/medical/crisis
@@ -251,7 +252,9 @@ var/global/list/robot_modules = list(
 		"Doot" = new /datum/robot_hull/flying/eyebot_medical
 	)
 
-/obj/item/robot_module/medical/crisis/New()
+/obj/item/robot_module/medical/crisis/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/blood_printer)
 	supported_upgrades += list(/obj/item/borg/upgrade/organ_printer)
 	src.modules += new /obj/item/device/flash(src)
@@ -299,7 +302,6 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/roller_holder(src)
 
 	appointed_huds += list("Science")
-	..()
 
 /obj/item/robot_module/medical/crisis/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -327,7 +329,9 @@ var/global/list/robot_modules = list(
 		"Doot" = new /datum/robot_hull/flying/eyebot_medical
 	)
 
-/obj/item/robot_module/medical/crisis_adv/New()
+/obj/item/robot_module/medical/crisis_adv/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/blood_printer)
 	supported_upgrades += list(/obj/item/borg/upgrade/organ_printer)
 	src.modules += new /obj/item/device/flash(src)
@@ -381,7 +385,6 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/roller_holder(src)
 
 	appointed_huds += list("Science", "Meson")
-	..()
 
 /obj/item/robot_module/medical/crisis_adv/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -418,11 +421,13 @@ var/global/list/robot_modules = list(
 
 	no_slip = 1
 
-/obj/item/robot_module/engineering/New()
-	..()
+/obj/item/robot_module/engineering/Initialize()
+	. = ..()
 	supported_upgrades += list(/obj/item/borg/upgrade/cargo_managment,/obj/item/borg/upgrade/rcd,/obj/item/borg/upgrade/paramedic,/obj/item/borg/upgrade/engineer_printer,/obj/item/borg/upgrade/pipe_printer)
 
-/obj/item/robot_module/engineering/general/New()
+/obj/item/robot_module/engineering/general/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/extinguisher(src)
 	src.modules += new /obj/item/weldingtool/largetank(src)
@@ -487,7 +492,6 @@ var/global/list/robot_modules = list(
 	src.modules += PL
 
 	appointed_huds += list("Meson")
-	..()
 
 /obj/item/robot_module/engineering/general/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -500,7 +504,9 @@ var/global/list/robot_modules = list(
 	subsystems = list(/datum/nano_module/power_monitor,/datum/nano_module/rcon,/datum/nano_module/supermatter_monitor,/datum/nano_module/atmos_control)
 
 
-/obj/item/robot_module/engineering/adv/New()
+/obj/item/robot_module/engineering/adv/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/rped)
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/extinguisher(src)
@@ -585,7 +591,6 @@ var/global/list/robot_modules = list(
 	src.modules += PL
 
 	appointed_huds += list("Meson", "Material")
-	..()
 
 /obj/item/robot_module/engineering/adv/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -600,8 +605,9 @@ var/global/list/robot_modules = list(
 	subsystems = list(/datum/nano_module/crew_monitor, /datum/nano_module/digitalwarrant)
 	can_be_pushed = 0
 
-/obj/item/robot_module/security/New()
-	..()
+/obj/item/robot_module/security/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/lasercooler,/obj/item/borg/upgrade/tasercooler,/obj/item/borg/upgrade/visor/thermal,/obj/item/borg/upgrade/paramedic,/obj/item/borg/upgrade/detective)
 
 /obj/item/robot_module/security/general
@@ -617,7 +623,9 @@ var/global/list/robot_modules = list(
 		"Tridroid" = new /datum/robot_hull/flying/orb_security
 	)
 
-/obj/item/robot_module/security/general/New()
+/obj/item/robot_module/security/general/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/crowbar(src)
 	src.modules += new /obj/item/extinguisher/mini(src)
@@ -636,7 +644,6 @@ var/global/list/robot_modules = list(
 		LC.locked = 0
 	src.modules += LC
 	src.emag = new /obj/item/gun/energy/lasercannon/mounted(src)
-	..()
 
 /obj/item/robot_module/security/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -676,7 +683,9 @@ var/global/list/robot_modules = list(
 		"Robo-Maid" = new /datum/robot_hull/legs/maidbot
 	)
 
-/obj/item/robot_module/janitor/general/New()
+/obj/item/robot_module/janitor/general/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/paramedic)
 
 	src.modules += new /obj/item/device/flash(src)
@@ -694,7 +703,6 @@ var/global/list/robot_modules = list(
 	src.emag = new /obj/item/reagent_containers/spray(src)
 	src.emag.reagents.add_reagent(/datum/reagent/lube, 250)
 	src.emag.SetName("Lube spray")
-	..()
 
 
 /obj/item/robot_module/janitor/respawn_consumable(mob/living/silicon/robot/R, amount)
@@ -722,8 +730,9 @@ var/global/list/robot_modules = list(
 					LANGUAGE_INDEPENDENT= 1,
 					LANGUAGE_SPACER = 1
 					)
-/obj/item/robot_module/service/New()
-	..()
+/obj/item/robot_module/service/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/paramedic,/obj/item/borg/upgrade/visor/thermal,/obj/item/borg/upgrade/cargo_managment)
 
 
@@ -741,7 +750,9 @@ var/global/list/robot_modules = list(
 		"Robo-Maid" = new /datum/robot_hull/legs/maidbot
 	)
 
-/obj/item/robot_module/service/butler/New()
+/obj/item/robot_module/service/butler/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/crowbar(src)
 	src.modules += new /obj/item/extinguisher/mini(src)
@@ -772,7 +783,6 @@ var/global/list/robot_modules = list(
 	var/datum/reagents/R = src.emag.create_reagents(50)
 	R.add_reagent(/datum/reagent/chloralhydrate/beer2, 50)
 	src.emag.SetName("Mickey Finn's Special Brew")
-	..()
 
 /obj/item/robot_module/general/butler/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -796,11 +806,13 @@ var/global/list/robot_modules = list(
 		"Doot" = new /datum/robot_hull/flying/eyebot_miner
 	)
 
-/obj/item/robot_module/miner/New()
-	..()
+/obj/item/robot_module/miner/Initialize()
+	. = ..()
 	supported_upgrades += list(/obj/item/borg/upgrade/cargo_managment,/obj/item/borg/upgrade/visor/thermal,/obj/item/borg/upgrade/paramedic,/obj/item/borg/upgrade/archeologist)
 
-/obj/item/robot_module/miner/general/New()
+/obj/item/robot_module/miner/general/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/crowbar(src)
 	src.modules += new /obj/item/extinguisher/mini(src)
@@ -813,9 +825,10 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/mining_scanner(src)
 	src.emag = new /obj/item/gun/energy/plasmacutter(src)
 	appointed_huds += list("Meson")
-	..()
 
-/obj/item/robot_module/miner/adv/New()
+/obj/item/robot_module/miner/adv/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/crowbar(src)
 	src.modules += new /obj/item/extinguisher/mini(src)
@@ -830,7 +843,6 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/mining_scanner(src)
 	src.emag = new /obj/item/gun/energy/plasmacutter(src)
 	appointed_huds += list("Meson")
-	..()
 
 /obj/item/robot_module/research
 	name = "research robot module"
@@ -844,7 +856,9 @@ var/global/list/robot_modules = list(
 		"Doot" = new /datum/robot_hull/flying/eyebot_science
 	)
 
-/obj/item/robot_module/research/general/New()
+/obj/item/robot_module/research/general/Initialize()
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/cargo_managment,/obj/item/borg/upgrade/visor/thermal,/obj/item/borg/upgrade/visor/meson,/obj/item/borg/upgrade/rped,/obj/item/borg/upgrade/paramedic,/obj/item/borg/upgrade/archeologist,/obj/item/borg/upgrade/integrated_circuit_upgrade)
 
 	src.modules += new /obj/item/device/flash(src)
@@ -882,7 +896,6 @@ var/global/list/robot_modules = list(
 	src.modules += C
 
 	appointed_huds += list("Science")
-	..()
 
 /obj/item/robot_module/research/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -907,7 +920,9 @@ var/global/list/robot_modules = list(
 				)
 	var/id
 
-/obj/item/robot_module/syndicate/New(mob/living/silicon/robot/R)
+/obj/item/robot_module/syndicate/Initialize(mapload, mob/living/silicon/robot/R)
+	. = ..()
+
 	supported_upgrades += list(/obj/item/borg/upgrade/tasercooler,/obj/item/borg/upgrade/lasercooler,/obj/item/borg/upgrade/visor/thermal,/obj/item/borg/upgrade/paramedic,/obj/item/borg/upgrade/detective)
 
 	loc = R
@@ -923,7 +938,6 @@ var/global/list/robot_modules = list(
 
 	id = R.idcard
 	src.modules += id
-	..()
 
 /obj/item/robot_module/syndicate/Destroy()
 	src.modules -= id
@@ -937,7 +951,9 @@ var/global/list/robot_modules = list(
 		"Combat Android" = new /datum/robot_hull/spider/droid_combat
 	)
 
-/obj/item/robot_module/security/combat/New()
+/obj/item/robot_module/security/combat/Initialize()
+	. = ..()
+
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/crowbar(src)
 	src.modules += new /obj/item/gun/energy/laser/mounted(src)
@@ -945,7 +961,6 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/borg/combat/shield(src)
 	src.modules += new /obj/item/borg/combat/mobility(src)
 	src.emag = new /obj/item/gun/energy/lasercannon/mounted(src)
-	..()
 
 /obj/item/robot_module/drone
 	name = "drone module"
@@ -953,7 +968,9 @@ var/global/list/robot_modules = list(
 	no_slip = 1
 	networks = list(NETWORK_ENGINEERING)
 
-/obj/item/robot_module/drone/New(mob/living/silicon/robot/robot)
+/obj/item/robot_module/drone/Initialize(mapload, mob/living/silicon/robot/robot)
+	. = ..()
+
 	src.modules += new /obj/item/weldingtool(src)
 	src.modules += new /obj/item/screwdriver(src)
 	src.modules += new /obj/item/wrench(src)
@@ -1033,7 +1050,6 @@ var/global/list/robot_modules = list(
 	var/obj/item/stack/material/cyborg/plastic/P = new (src)
 	P.synths = list(plastic)
 	src.modules += P
-	..()
 
 /obj/item/robot_module/drone/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()
@@ -1046,9 +1062,9 @@ var/global/list/robot_modules = list(
 	channels = list("Engineering" = 1)
 	languages = list()
 
-/obj/item/robot_module/drone/construction/New()
+/obj/item/robot_module/drone/construction/Initialize()
+	. = ..()
 	src.modules += new /obj/item/rcd/borg(src)
-	..()
 
 /obj/item/robot_module/drone/respawn_consumable(mob/living/silicon/robot/R, amount)
 	..()

@@ -114,7 +114,7 @@ var/list/ai_verbs_default = list(
 /mob/living/silicon/ai/proc/remove_ai_verbs()
 	src.verbs -= ai_verbs_default
 
-/mob/living/silicon/ai/New(loc, datum/ai_laws/L, obj/item/device/mmi/B, safety = 0)
+/mob/living/silicon/ai/Initialize(mapload, loc, datum/ai_laws/L, obj/item/device/mmi/B, safety = 0)
 	announcement = new()
 	announcement.title = "A.I. Announcement"
 	announcement.announcement_type = "A.I. Announcement"
@@ -185,7 +185,7 @@ var/list/ai_verbs_default = list(
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 
 	ai_list += src
-	..()
+	. = ..()
 	ai_radio = silicon_radio
 	ai_radio.myAi = src
 

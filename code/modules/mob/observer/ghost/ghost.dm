@@ -35,7 +35,7 @@ var/global/list/image/ghost_sightless_images = list() //this is a list of images
 
 	var/list/hud_images // A list of hud images
 
-/mob/observer/ghost/New(mob/body)
+/mob/observer/ghost/Initialize(mapload, mob/body)
 	see_in_dark = 100
 	verbs += /mob/proc/toggle_antag_pool
 	verbs += /mob/proc/join_as_actor
@@ -79,7 +79,7 @@ var/global/list/image/ghost_sightless_images = list() //this is a list of images
 
 	GLOB.ghost_mob_list += src
 
-	..()
+	. = ..(mapload)
 
 /mob/observer/ghost/Destroy()
 	GLOB.ghost_mob_list -= src

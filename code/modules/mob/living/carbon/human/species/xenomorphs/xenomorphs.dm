@@ -9,31 +9,31 @@
 	new_alien.faction = "xenomorph"
 	return new_alien
 
-/mob/living/carbon/human/xenos/New(new_loc, new_species)
+/mob/living/carbon/human/xenos/Initialize()
 	h_style = "Bald"
 	faction = "xenomorph"
-	..(new_loc, new_species)
+	. = ..()
 
-/mob/living/carbon/human/xenos/drone/New(new_loc)
-	..(new_loc, SPECIES_XENO_DRONE)
+/mob/living/carbon/human/xenos/drone/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_DRONE)
 
-/mob/living/carbon/human/xenos/sentinel/New(new_loc)
-	..(new_loc, SPECIES_XENO_SENTINEL)
+/mob/living/carbon/human/xenos/sentinel/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_SENTINEL)
 
-/mob/living/carbon/human/xenos/hunter/New(new_loc)
-	..(new_loc, SPECIES_XENO_HUNTER)
+/mob/living/carbon/human/xenos/hunter/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_HUNTER)
 
-/mob/living/carbon/human/xenos/vile_drone/New(new_loc)
-	..(new_loc, SPECIES_XENO_DRONE_VILE)
+/mob/living/carbon/human/xenos/vile_drone/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_DRONE_VILE)
 
-/mob/living/carbon/human/xenos/primal_sentinel/New(new_loc)
-	..(new_loc, SPECIES_XENO_SENTINEL_PRIMAL)
+/mob/living/carbon/human/xenos/primal_sentinel/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_SENTINEL_PRIMAL)
 
-/mob/living/carbon/human/xenos/feral_hunter/New(new_loc)
-	..(new_loc, SPECIES_XENO_HUNTER_FERAL)
+/mob/living/carbon/human/xenos/feral_hunter/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_HUNTER_FERAL)
 
-/mob/living/carbon/human/xenos/queen/New(new_loc)
-	..(new_loc, SPECIES_XENO_QUEEN)
+/mob/living/carbon/human/xenos/queen/Initialize(mapload, new_loc)
+	. = ..(mapload, new_loc, SPECIES_XENO_QUEEN)
 
 // I feel like we should generalize/condense down all the various icon-rendering antag procs.
 /*----------------------------------------

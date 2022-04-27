@@ -396,7 +396,7 @@
 
 /mob/living/simple_animal/proc/handle_panic_target()
 	//see if we should stop panicing
-	var/mob/M = panic_target.resolve()
+	var/mob/M = panic_target?.resolve()
 	if(istype(M))
 		if(M.loc in view(src))
 			stop_automated_movement = 1

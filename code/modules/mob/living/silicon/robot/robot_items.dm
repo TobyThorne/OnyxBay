@@ -547,7 +547,7 @@
 		. += "\nContains: [text]"
 
 /obj/item/robot_rack/Initialize(mapload, starting_objects = 0)
-	. = ..()
+	. = ..(mapload)
 	for(var/i = 1, i <= min(starting_objects, capacity), i++)
 		var/o_type = pick(object_type)
 		held += new o_type(src)

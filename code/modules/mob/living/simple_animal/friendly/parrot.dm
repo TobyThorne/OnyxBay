@@ -36,7 +36,7 @@
 	pass_flags = PASS_FLAG_TABLE
 	mob_size = MOB_SMALL
 
-	speak = list("ĞŸÑ€Ğ¸Ğ²ĞµÑ‚","ĞšÑ€ĞµĞºĞµÑ€?","Ğ Ğ¯Ğ¯Ğ¯Ğ¯ Ğ¤Ñ€ÑĞ´ ĞšĞ¾Ğ»Ğ»Ğ¾Ğ½ ÑƒĞ±Ğ¸Ğ²Ğ°ĞµÑ‚ Ğ² Ñ‚ĞµÑ…Ğ°Ñ…")
+	speak = list("Ïğèâåò","Êğåêåğ?","Ğßßßß Ôğıä Êîëëîí óáèâàåò â òåõàõ")
 	speak_emote = list("squawks","says","yells")
 	emote_hear = list("squawks","bawks")
 	emote_see = list("flutters its wings")
@@ -58,7 +58,7 @@
 	var/parrot_sleep_dur = 25 //Same as above, this is the var that physically counts down
 	var/parrot_dam_zone = list(BP_CHEST, BP_HEAD, BP_L_ARM, BP_R_ARM, BP_L_LEG, BP_R_LEG) //For humans, select a bodypart to attack
 
-	var/parrot_speed = 1 //"Delay in world ticks between movement." according to byond. Yeah, that's BS but it does directly affect movement. Higher number = slower.
+	var/parrot_speed = 3 //"Delay in world ticks between movement." according to byond. Yeah, that's BS but it does directly affect movement. Higher number = slower.
 	var/parrot_been_shot = 0 //Parrots get a speed bonus after being shot. This will deincrement every Life() and at 0 the parrot will return to regular speed.
 
 	var/list/speech_buffer = list()
@@ -131,7 +131,7 @@
 	if(!isnull(parrot_interest))
 		register_signal(parrot_interest, SIGNAL_QDELETING, .proc/_interest_deleted)
 
-/datum/mob_ai/proc/_interest_deleted()
+/mob/living/simple_animal/parrot/proc/_interest_deleted()
 	set_interest(null)
 
 /mob/living/simple_animal/parrot/proc/set_perch(obj/O)
@@ -141,7 +141,7 @@
 	if(!isnull(parrot_perch))
 		register_signal(parrot_perch, SIGNAL_QDELETING, .proc/_perch_deleted)
 
-/datum/mob_ai/proc/_perch_deleted()
+/mob/living/simple_animal/parrot/proc/_perch_deleted()
 	set_perch(null)
 
 
@@ -183,9 +183,9 @@
 				if("ears")
 					if(ears)
 						if(available_channels.len)
-							src.say("[pick(available_channels)] Ğ Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯ ĞĞ¡Ğ¢ĞĞ’Ğ¬ ĞĞĞ£Ğ¨ĞĞ˜Ğš Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯!")
+							src.say("[pick(available_channels)] ĞĞĞßßßß ÎÑÒÀÂÜ ÍÀÓØÍÈÊ ĞĞßßßßßß!")
 						else
-							src.say("Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯ ĞĞ¡Ğ¢ĞĞ’Ğ¬ ĞĞĞ£Ğ¨ĞĞ˜Ğš Ğ Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯!")
+							src.say("ĞĞßßßßß ÎÑÒÀÂÜ ÍÀÓØÍÈÊ ĞĞĞßßßßß!")
 						ears.loc = src.loc
 						ears = null
 						for(var/possible_phrase in speak)
@@ -199,9 +199,9 @@
 						to_chat(usr, "<span class='warning'>There is nothing to remove from its [remove_from]!</span>")
 						return
 					if(available_channels.len)
-						src.say("[pick(available_channels)] Ğ Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯ ĞŸĞĞ›ĞĞ–Ğ˜ ĞĞ ĞœĞ•Ğ¡Ğ¢Ğ Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯!")
+						src.say("[pick(available_channels)] ĞĞĞßßßßß ÏÎËÎÆÈ ÍÀ ÌÅÑÒÎ ĞĞßßßßßß!")
 					else
-						src.say("Ğ Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯ ĞŸĞĞ›ĞĞ–Ğ˜ ĞĞ ĞœĞ•Ğ¡Ğ¢Ğ Ğ Ğ Ğ Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯Ğ¯!")
+						src.say("ĞĞĞßßßß ÏÎËÎÆÈ ÍÀ ÌÅÑÒÎ ĞĞĞßßßßßß!")
 					held_item.loc = src.loc
 					held_item = null
 
@@ -265,9 +265,9 @@
 							to_chat(usr, "<span class='notice'>You put the item into claws.</span>")
 							if(istype(src, /mob/living/simple_animal/parrot/Poly))
 								if(prob(50))
-									say("ĞŸĞ¾Ğ»Ğ¸ Ğ½Ñ€Ğ°Ğ²Ğ¸Ñ‚ÑÑ!")
+									say("Ïîëè íğàâèòñÿ!")
 								else
-									say("ĞŸĞ¾Ğ»Ğ¸ Ğ½ĞµĞ´Ğ¾Ğ²Ğ¾Ğ»ĞµĞ½!")
+									say("Ïîëè íåäîâîëåí!")
 		else
 			..()
 
@@ -745,7 +745,7 @@
 /mob/living/simple_animal/parrot/Poly
 	name = "Poly"
 	desc = "Poly the Parrot. An expert on quantum cracker theory."
-	speak = list("ĞŸĞ¾Ğ»Ğ¸ Ñ…Ğ¾Ñ‡ĞµÑ‚ ĞºÑ€ĞµĞºĞµÑ€!", ":e ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑŒÑ‚Ğµ Ğ¼Ğ°Ñ‚ĞµÑ€Ğ¸Ñ, ÑƒÑ‰ĞµÑ€Ğ±Ñ‹!",":e ĞĞ°ÑÑ‚Ñ€Ğ°Ğ¸Ğ²Ğ°Ğ¹Ñ‚Ğµ Ğ¡ĞœĞ•Ğ¡Ñ‹, Ğ»ĞµĞ½Ğ¸Ğ²Ñ‹Ğµ Ğ¶Ğ¾Ğ¿Ñ‹!",":e ĞšĞ¢Ğ Ğ¡ĞŸĞ˜Ğ—Ğ”Ğ˜Ğ› Ğ§Ğ•Ğ Ğ¢ĞĞ’Ğ« Ğ Ğ˜Ğ“Ğ˜?",":e ĞĞĞ Ğ¡Ğ•Ğ™Ğ§ĞĞ¡ Ğ•Ğ‘ĞĞ•Ğ¢ Ğ’Ğ«Ğ—Ğ«Ğ’ĞĞ™Ğ¢Ğ• Ğ¨ĞĞ¢Ğ¢Ğ›!")
+	speak = list("Ïîëè õî÷åò êğåêåğ!", ":e Ïğîâåğüòå ìàòåğèş, óùåğáû!",":e Íàñòğàèâàéòå ÑÌÅÑû, ëåíèâûå æîïû!",":e ÊÒÎ ÑÏÈÇÄÈË ×ÅĞÒÎÂÛ ĞÈÃÈ?",":e ÎÍÀ ÑÅÉ×ÀÑ ÅÁÍÅÒ ÂÛÇÛÂÀÉÒÅ ØÀÒÒË!")
 
 /mob/living/simple_animal/parrot/Poly/New()
 	ears = new /obj/item/device/radio/headset/headset_eng(src)

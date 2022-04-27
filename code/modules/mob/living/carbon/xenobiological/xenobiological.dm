@@ -62,7 +62,7 @@
 /mob/living/carbon/metroid/setToxLoss(amount)
 	adjustToxLoss(amount-getToxLoss())
 
-/mob/living/carbon/metroid/New(location, colour = "green")
+/mob/living/carbon/metroid/Initialize(mapload, location, colour = "green")
 
 	verbs += /mob/living/proc/ventcrawl
 
@@ -72,7 +72,7 @@
 	real_name = name
 	mutation_chance = rand(25, 35)
 	regenerate_icons()
-	..(location)
+	. = ..(mapload, location)
 
 /mob/living/carbon/metroid/movement_delay()
 	if (bodytemperature >= 330.23) // 135 F
