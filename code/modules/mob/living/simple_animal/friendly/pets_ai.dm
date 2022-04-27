@@ -10,7 +10,7 @@
 	var/mob/master = null //undisputed master. Their commands hold ultimate sway and ultimate power.
 	var/static/list/text_to_command = list()
 
-/datum/mob_ai/pet/New()
+/datum/mob_ai/pet/Initialize()
 	. = ..()
 	if(!length(text_to_command))
 		for(var/command_text in world.file2list("config/names/animal_commands/stop.txt"))
@@ -25,6 +25,12 @@
 			if(!command_text)
 				continue
 			text_to_command[command_text] = COMMAND_WANDERING
+
+/datum/mob_ai/pet/Destroy()
+	delete_wandering_timer()
+	target_mob = null
+	master = null
+	return ..()
 
 /datum/mob_ai/pet/do_move()
 	..()

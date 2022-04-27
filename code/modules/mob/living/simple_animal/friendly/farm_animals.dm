@@ -27,9 +27,9 @@
 	var/datum/reagents/udder = null
 	var/isragemode = FALSE
 
-/mob/living/simple_animal/hostile/retaliate/goat/New()
+/mob/living/simple_animal/hostile/retaliate/goat/Initialize()
+	. = ..()
 	udder = new(50, src)
-	..()
 
 /mob/living/simple_animal/hostile/retaliate/goat/Destroy()
 	QDEL_NULL(udder)
@@ -143,8 +143,7 @@
 
 /mob/living/simple_animal/cow/Initialize()
 	. = ..()
-	udder = milktype
-	udder = new(50, src)
+	udder = new milktype(50, src)
 
 /mob/living/simple_animal/cow/attackby(obj/item/O, mob/user)
 	var/obj/item/reagent_containers/glass/G = O

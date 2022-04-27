@@ -90,8 +90,8 @@
 	bodyparts = /decl/simple_animal_bodyparts/bird
 
 
-/mob/living/simple_animal/parrot/New()
-	..()
+/mob/living/simple_animal/parrot/Initialize()
+	. = ..()
 	if(!ears)
 		var/headset = pick(/obj/item/device/radio/headset/headset_sec, \
 						/obj/item/device/radio/headset/headset_eng, \
@@ -107,17 +107,43 @@
 			  /mob/living/simple_animal/parrot/verb/drop_held_item_player, \
 			  /mob/living/simple_animal/parrot/proc/perch_player)
 
+/mob/living/simple_animal/parrot/Destroy()
+	QDEL_NULL(ears)
+	QDEL_NULL(held_item)
+	return ..()
 
 /mob/living/simple_animal/parrot/death(gibbed, deathmessage, show_dead_message)
 	if(held_item)
-		held_item.loc = src.loc
+		held_item.forceMove(loc)
 		held_item = null
-	walk(src,0)
+	walk(src, 0)
 	..(gibbed, deathmessage, show_dead_message)
 
 /mob/living/simple_animal/parrot/Stat()
 	. = ..()
 	stat("Held Item", held_item)
+
+// These two are used often AF, it's easier to handle them this way than resolve weakrefs everywhere.
+/mob/living/simple_animal/parrot/proc/set_interest(atom/movable/AM)
+	if(parrot_interest)
+		unregister_signal(parrot_interest, SIGNAL_QDELETING)
+	parrot_interest = AM
+	if(!isnull(parrot_interest))
+		register_signal(parrot_interest, SIGNAL_QDELETING, .proc/_interest_deleted)
+
+/datum/mob_ai/proc/_interest_deleted()
+	set_interest(null)
+
+/mob/living/simple_animal/parrot/proc/set_perch(obj/O)
+	if(parrot_perch)
+		unregister_signal(parrot_perch, SIGNAL_QDELETING)
+	parrot_perch = O
+	if(!isnull(parrot_perch))
+		register_signal(parrot_perch, SIGNAL_QDELETING, .proc/_perch_deleted)
+
+/datum/mob_ai/proc/_perch_deleted()
+	set_perch(null)
+
 
 /*
  * Inventory
@@ -260,7 +286,7 @@
 		if(parrot_state == PARROT_PERCH)
 			parrot_sleep_dur = parrot_sleep_max //Reset it's sleep timer if it was perched
 
-		parrot_interest = M
+		set_interest(M)
 		parrot_state = PARROT_SWOOP //The parrot just got hit, it WILL move, now to pick a direction..
 
 		if(M.health < 50) //Weakened mob? Fight back!
@@ -278,7 +304,7 @@
 			if(parrot_state == PARROT_PERCH)
 				parrot_sleep_dur = parrot_sleep_max //Reset it's sleep timer if it was perched
 
-			parrot_interest = user
+			set_interest(user)
 			parrot_state = PARROT_SWOOP | PARROT_FLEE
 			icon_state = "parrot_fly"
 			drop_held_item(0)
@@ -291,7 +317,7 @@
 		if(parrot_state == PARROT_PERCH)
 			parrot_sleep_dur = parrot_sleep_max //Reset it's sleep timer if it was perched
 
-		parrot_interest = null
+		set_interest(null)
 		parrot_state = PARROT_WANDER //OWFUCK, Been shot! RUN LIKE HELL!
 		parrot_been_shot += 5
 		icon_state = "parrot_fly"
@@ -378,7 +404,7 @@
 				speak = newspeak
 
 			//Search for item to steal
-			parrot_interest = search_for_item()
+			set_interest(search_for_item())
 			if(parrot_interest)
 				visible_emote("looks in [parrot_interest]'s direction and takes flight")
 				parrot_state = PARROT_SWOOP | PARROT_STEAL
@@ -389,7 +415,7 @@
 	else if(parrot_state == PARROT_WANDER)
 		//Stop movement, we'll set it later
 		walk(src, 0)
-		parrot_interest = null
+		set_interest(null)
 
 		//Wander around aimlessly. This will help keep the loops from searches down
 		//and possibly move the mob into a new are in view of something they can use
@@ -401,12 +427,12 @@
 			var/atom/movable/AM = search_for_perch_and_item() //This handles checking through lists so we know it's either a perch or stealable item
 			if(AM)
 				if(istype(AM, /obj/item) || isliving(AM))	//If stealable item
-					parrot_interest = AM
+					set_interest(AM)
 					visible_emote("turns and flies towards [parrot_interest]")
 					parrot_state = PARROT_SWOOP | PARROT_STEAL
 					return
 				else	//Else it's a perch
-					parrot_perch = AM
+					set_perch(AM)
 					parrot_state = PARROT_SWOOP | PARROT_RETURN
 					return
 			return
@@ -420,7 +446,7 @@
 			return
 
 		else //Have an item but no perch? Find one!
-			parrot_perch = search_for_perch()
+			set_perch(search_for_perch())
 			if(parrot_perch)
 				parrot_state = PARROT_SWOOP | PARROT_RETURN
 				return
@@ -446,7 +472,7 @@
 					parrot_interest.loc = src
 					visible_message("[src] grabs the [held_item]!", "<span class='notice'>You grab the [held_item]!</span>", "You hear the sounds of wings flapping furiously.")
 
-			parrot_interest = null
+			set_interest(null)
 			parrot_state = PARROT_SWOOP | PARROT_RETURN
 			return
 
@@ -457,7 +483,7 @@
 	else if(parrot_state == (PARROT_SWOOP | PARROT_RETURN))
 		walk(src, 0)
 		if(!parrot_perch || !isturf(parrot_perch.loc)) //Make sure the perch exists and somehow isnt inside of something else.
-			parrot_perch = null
+			set_perch(null)
 			parrot_state = PARROT_WANDER
 			return
 
@@ -486,7 +512,7 @@
 
 		//If we're attacking a nothing, an object, a turf or a ghost for some stupid reason, switch to wander
 		if(!parrot_interest || !isliving(parrot_interest))
-			parrot_interest = null
+			set_interest(null)
 			parrot_state = PARROT_WANDER
 			return
 
@@ -497,7 +523,7 @@
 
 			//If the mob we've been chasing/attacking dies or falls into crit, check for loot!
 			if(L.stat)
-				parrot_interest = null
+				set_interest(null)
 				if(!held_item)
 					held_item = steal_from_ground()
 					if(!held_item)
@@ -529,9 +555,9 @@
 		return
 //-----STATE MISHAP
 	else //This should not happen. If it does lets reset everything and try again
-		walk(src,0)
-		parrot_interest = null
-		parrot_perch = null
+		walk(src, 0)
+		set_interest(null)
+		set_perch(null)
 		drop_held_item()
 		parrot_state = PARROT_WANDER
 		return
@@ -791,7 +817,7 @@
 	if(!success)
 		return 0
 
-	parrot_interest = user
+	set_interest(user)
 	parrot_state = PARROT_SWOOP | PARROT_ATTACK //Attack other animals regardless
 	icon_state = "parrot_fly"
 	return success
