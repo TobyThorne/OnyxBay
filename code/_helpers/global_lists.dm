@@ -45,6 +45,9 @@ var/list/obj/item/device/uplink/world_uplinks = list()
 // Surgery steps
 GLOBAL_LIST_EMPTY(surgery_steps)
 
+// Organ conditions
+GLOBAL_LIST_EMPTY(organ_conditions)
+
 //Preferences stuff
 //Hairstyles
 GLOBAL_LIST_EMPTY(hair_styles_list)        //stores /datum/sprite_accessory/hair indexed by name
@@ -192,6 +195,11 @@ var/global/list/string_slot_flags = list(
 		var/datum/surgery_step/S = new path()
 		GLOB.surgery_steps += S
 	sort_surgeries()
+
+	//Organ Conditions - Initialize all /datum/organ_condition into a list
+	paths = typesof(/datum/organ_condition)
+	for(var/path in paths)
+		GLOB.organ_conditions[OC.id] = path
 
 	//List of job. I can't believe this was calculated multiple times per tick!
 	paths = typesof(/datum/job)-/datum/job

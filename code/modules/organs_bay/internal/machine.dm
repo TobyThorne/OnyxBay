@@ -100,6 +100,6 @@
 		owner.set_stat(CONSCIOUS)
 		owner.visible_message(SPAN_DANGER("\The [owner] twitches visibly!"))
 
-/obj/item/organ/internal/cell/stethoscope_results()
+/obj/item/organ/internal/cell/listen()
 	if(get_charge())
 		return "faint hum of the power bank"

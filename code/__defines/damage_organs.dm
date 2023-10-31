@@ -55,6 +55,24 @@
 #define ORGAN_FLAG_GENDERED_ICON  (1<<6) // The icon state for this organ appends _m/_f.
 #define ORGAN_FLAG_HEALS_OVERKILL (1<<7) // The organ heals from overkill damage.
 
+// Organ condition flags.
+#define ORCON_VIS_NORMAL    0 // Shown by health scanners
+#define ORCON_VIS_LOWER     1 // Shown by scanning pods
+#define ORCON_VIS_LOWERST   2 // Shown by precise examination
+#define ORCON_VIS_INVISIBLE 3 // Never shown, some secret internal condition
+
+#define ORCON_REJECTION "rejection"
+
+#define ORCON_I_DEAD "i_dead"
+#define ORCON_I_DISCONNECTED "disconnected"
+#define ORCON_I_CATARACT "cataract"
+#define ORCON_I_CIRRHOSIS "cirrhosis"
+
+#define ORCON_E_DEAD "e_dead"
+#define ORCON_E_DISFIGURED "disfigured"
+
+#define ORCON_B_BRITTLE "brittle bone"
+
 // Droplimb types.
 #define DROPLIMB_EDGE 0
 #define DROPLIMB_BLUNT 1
@@ -88,3 +106,13 @@
 #define BLOOD_VOLUME_OKAY    75
 #define BLOOD_VOLUME_BAD     60
 #define BLOOD_VOLUME_SURVIVE 40
+
+#define CAPACITY_METABOLISM    "metabolism"
+#define CAPACITY_FILTRATION    "blood filtration"
+#define CAPACITY_PUMPING       "blood pumping"
+#define CAPACITY_PAIN          "pain"
+#define CAPACITY_CONSCIOUSNESS "consciousness"
+#define CAPACITY_TOX_RESIST    "toxic resistance"
+#define CAPACITY_BREATHING     "breathing"
+#define CAPACITY_SIGHT         "sight"
+#define CAPACITY_ALL           list(CAPACITY_METABOLISM, CAPACITY_FILTRATION, CAPACITY_PUMPING, CAPACITY_PAIN, CAPACITY_CONSCIOUSNESS, CAPACITY_TOX_RESIST, )

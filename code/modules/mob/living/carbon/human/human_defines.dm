@@ -120,6 +120,11 @@
 	var/obj/item/grab/current_grab_type 	// What type of grab they use when they grab someone.
 	var/skin_state = SKIN_NORMAL
 	var/no_pain = 0
+	var/pain_level = 0
 	var/full_pain = 0 // Cheaper to actually store this than iterate over all the organs for every single check
 
+	var/metabolism_level = 100
+	var/blood_filtration_level = 100
+	var/blood_pumping_level = 100
+	var/consciousness_level = 100
 	var/debug = 0

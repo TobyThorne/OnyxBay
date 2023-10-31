@@ -3,6 +3,7 @@ var/list/organ_cache = list()
 /obj/item/organ
 	name = "organ"
 	icon = 'icons/mob/human_races/organs/human.dmi'
+	germ_level = 0
 	w_class = ITEM_SIZE_TINY
 	dir = SOUTH
 
@@ -13,13 +14,6 @@ var/list/organ_cache = list()
 	// Status tracking.
 	var/status = 0                    // Various status flags (such as robotic)
 	var/vital = FALSE                 // Lose a vital limb, die immediately.
-	var/list/capacities = list(
-		// CAPACITY_NAME = importance
-	)
-	var/list/default_conditions = list() // Contains OROCON IDs
-	var/list/conditions = list()
-
-	var/efficiency = 1.0
 
 	// Reference data.
 	var/mob/living/carbon/human/owner // Current mob owning the organ.
@@ -28,29 +22,50 @@ var/list/organ_cache = list()
 
 	// Damage vars.
 	var/health = 0                    // Current damage to the organ
-	var/broken_health = 0             // Damage before becoming broken
+	var/broken_health = 30            // Damage before becoming broken
 	var/max_health = 100              // Damage cap
-	var/damage_mult = 1.0             // Incoming damage multiplier
-	var/pain = 0                      // How much pain we hold
-	var/pain_mult = 1.0               // Pain multiplier
-	var/conditional_pain = 0          // Constant pain from conditions
-	var/germ_mult = 1.0               // How prone to infections it is
 	var/rejecting = FALSE             // Is this organ already being rejected?
 
 	var/death_time = 0
 
 	var/food_organ_type                              // path of food made from organ, ex.
 	var/obj/item/reagent_containers/food/food_organ
-	var/is_edible = FALSE                            // used to override food_organ's creation and using
+	var/disable_food_organ = FALSE                   // used to override food_organ's creation and using
+
+/obj/item/organ/return_item()
+	return food_organ
+
+/obj/item/organ/proc/organ_eaten(mob/user)
+	qdel(src)
+
+/obj/item/organ/proc/update_food_from_organ()
+	food_organ.SetName(name)
+	food_organ.appearance = src
+	reagents.trans_to(food_organ, reagents.total_volume)
+
+/obj/item/organ/Destroy()
+	if(owner)
+		owner = null
+	dna = null
+	QDEL_NULL(food_organ)
+	return ..()
+
+/obj/item/organ/proc/update_health()
+	return
+
+/obj/item/organ/proc/is_broken()
+	return (damage >= min_broken_damage || (status & ORGAN_CUT_AWAY) || (status & ORGAN_BROKEN))
 
 /obj/item/organ/New(mob/living/carbon/holder)
 	..(holder)
 
-	if(food_organ_type && is_edible)
+	if(food_organ_type && !disable_food_organ)
 		food_organ = new food_organ_type(src)
 
-	if(max_health && !broken_health)
-		broken_health = Floor(max_health * 0.5)
+	if(max_damage)
+		min_broken_damage = Floor(max_damage / 2)
+	else
+		max_damage = min_broken_damage * 2
 
 	if(istype(holder))
 		owner = holder
@@ -71,64 +86,7 @@ var/list/organ_cache = list()
 	create_reagents(5 * (w_class-1)**2)
 	reagents.add_reagent(/datum/reagent/nutriment/protein, reagents.maximum_volume)
 
-	for(var/id in default_conditions)
-		add_condition(id, FALSE)
-	update_conditions()
-
 	update_icon()
-
-/obj/item/organ/Destroy()
-	owner = null
-	dna = null
-	QDEL_NULL(food_organ)
-	QDEL_LIST(conditions)
-	capacities.Cut()
-	return ..()
-
-/obj/item/organ/proc/add_condition(var/condition_id, update_conditions = TRUE)
-	if(!condition_id || !(condition_id in GLOB.organ_conditions))
-		return FALSE
-	conditions[condition_id] = new GLOB.organ_conditions[condition_id]()
-	if(update_conditions)
-		update_conditions()
-	return TRUE
-
-/obj/item/organ/proc/remove_condition(var/condition_id, update_conditions = TRUE)
-	if(!condition_id || !(condition_id in GLOB.organ_conditions) || !conditions[condition_id])
-		return FALSE
-	qdel(conditions[conditions_id])
-	conditions.Remove(conditions_id)
-	if(update_conditions)
-		update_conditions()
-	return TRUE
-
-/obj/item/organ/proc/get_condition(var/condition_id)
-	if(!condition_id || !(condition_id in GLOB.organ_conditions) || !conditions[condition_id])
-		return null
-	return conditions[conditions_id]
-
-/obj/item/organ/proc/update_conditions()
-	efficiency = initial(efficiency)
-	max_health = initial(max_health)
-	damage_mult = initial(damage_mult)
-	pain_mult = initial(pain_mult)
-	conditional_pain = initial(conditional_pain)
-	for(var/datum/organ_condition/OC in conditions)
-		OC.update()
-		efficiency *= OC.organ_efficiency
-		damage_mult *= OC.organ_damage_mult
-		pain_mult *= OC.organ_pain_mult
-		conditional_pain += OC.organ_pain
-
-/obj/item/organ/proc/update_pain()
-	pain = 0
-	pain += conditional_pain
-	pain += (max_health - health)
-	pain *= pain_mult
-	return pain
-
-/obj/item/organ/proc/update_health()
-	return
 
 /obj/item/organ/proc/set_dna(datum/dna/new_dna)
 	if(new_dna)
@@ -139,9 +97,21 @@ var/list/organ_cache = list()
 		blood_DNA[dna.unique_enzymes] = dna.b_type
 		species = all_species[new_dna.species]
 
+/obj/item/organ/proc/die()
+	damage = max_damage
+	status |= ORGAN_DEAD
+	set_next_think(0)
+	death_time = world.time
+	if(owner && vital)
+		owner.death()
+
 /obj/item/organ/think()
 	if(loc != owner)
 		owner = null
+
+	//dead already, no need for more processing
+	if(status & ORGAN_DEAD)
+		return
 
 	//Process infections
 	if(BP_IS_ROBOTIC(src) || (owner?.species?.species_flags & SPECIES_FLAG_IS_PLANT))
@@ -241,6 +211,34 @@ var/list/organ_cache = list()
 		if (prob(3))	//about once every 30 seconds
 			take_general_damage(1,silent=prob(30))
 
+/obj/item/organ/proc/handle_rejection()
+	// Process unsuitable transplants. TODO: consider some kind of
+	// immunosuppressant that changes transplant data to make it match.
+	if(owner.virus_immunity() < 10) //for now just having shit immunity will suppress it
+		return
+	if(BP_IS_ROBOTIC(src))
+		return
+	if(dna)
+		if(!rejecting)
+			if(owner.blood_incompatible(dna.b_type, species))
+				rejecting = 1
+		else
+			rejecting++ //Rejection severity increases over time.
+			if(rejecting % 10 == 0) //Only fire every ten rejection ticks.
+				switch(rejecting)
+					if(1 to 50)
+						germ_level++
+					if(51 to 200)
+						germ_level += rand(1,2)
+					if(201 to 500)
+						germ_level += rand(2,3)
+					if(501 to INFINITY)
+						germ_level += rand(3,5)
+						owner.reagents.add_reagent(/datum/reagent/toxin, rand(1,2))
+
+/obj/item/organ/proc/receive_chem(chemical as obj)
+	return 0
+
 /obj/item/organ/proc/remove_rejuv()
 	qdel(src)
 
@@ -259,7 +257,7 @@ var/list/organ_cache = list()
 	if(!owner || !germ_level)
 		return
 	var/antibiotics = owner.chem_effects[CE_ANTIBIOTIC]
-	if(!antibiotics)
+	if (!antibiotics)
 		return
 
 	if (germ_level < INFECTION_LEVEL_ONE)
@@ -274,6 +272,13 @@ var/list/organ_cache = list()
 
 /obj/item/organ/proc/heal_damage(amount)
 	damage = between(0, damage - round(amount, 0.1), max_damage)
+
+
+/obj/item/organ/proc/robotize() //Being used to make robutt hearts, etc
+	status = ORGAN_ROBOTIC
+
+/obj/item/organ/proc/mechassist() //Used to add things like pacemakers, etc
+	status = ORGAN_ASSISTED
 
 /**
  *  Remove an organ
@@ -306,10 +311,9 @@ var/list/organ_cache = list()
 
 /obj/item/organ/proc/replaced(mob/living/carbon/human/target, obj/item/organ/external/affected)
 	owner = target
-	forceMove(owner)
+	forceMove(owner) //just in case
 	if(BP_IS_ROBOTIC(src))
 		set_dna(owner.dna)
-	update_conditions()
 	return 1
 
 /obj/item/organ/attack(mob/target, mob/user)
@@ -327,6 +331,12 @@ var/list/organ_cache = list()
 		return
 
 	target.attackby(return_item(), user)
+
+/obj/item/organ/proc/can_feel_pain()
+	return (!BP_IS_ROBOTIC(src) && owner && (!owner.no_pain || !species || !(species.species_flags & SPECIES_FLAG_NO_PAIN)))
+
+/obj/item/organ/proc/is_usable()
+	return !(status & (ORGAN_CUT_AWAY|ORGAN_MUTATED|ORGAN_DEAD))
 
 /obj/item/organ/proc/can_recover()
 	return (!(status & ORGAN_DEAD) || death_time >= world.time - ORGAN_RECOVERY_THRESHOLD)
@@ -365,20 +375,6 @@ var/list/organ_cache = list()
 	if(rejecting)
 		. += "Genetic Rejection"
 
-
 //used by stethoscope
-/obj/item/organ/proc/stethoscope_results()
+/obj/item/organ/proc/listen()
 	return
-
-
-// Edible organs yay
-/obj/item/organ/return_item()
-	return food_organ
-
-/obj/item/organ/proc/organ_eaten(mob/user)
-	qdel(src)
-
-/obj/item/organ/proc/update_food_from_organ()
-	food_organ.SetName(name)
-	food_organ.appearance = src
-	reagents.trans_to(food_organ, reagents.total_volume)

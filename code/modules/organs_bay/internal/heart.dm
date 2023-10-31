@@ -174,7 +174,7 @@
 
 	return pulse > PULSE_NONE || BP_IS_ROBOTIC(src) || (owner.status_flags & FAKEDEATH)
 
-/obj/item/organ/internal/heart/stethoscope_results()
+/obj/item/organ/internal/heart/listen()
 	if(BP_IS_ROBOTIC(src) && is_working())
 		if(is_bruised())
 			return "sputtering pump"

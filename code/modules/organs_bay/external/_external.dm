@@ -1534,10 +1534,10 @@ Note that amputating the affected organ does in fact remove the infection from t
 		to_chat(user, "<span class='warning'>The [joint] is dislocated!</span>")
 	return 1
 
-/obj/item/organ/external/stethoscope_results()
+/obj/item/organ/external/listen()
 	var/list/sounds = list()
 	for(var/obj/item/organ/internal/I in internal_organs)
-		var/gutsound = I.stethoscope_results()
+		var/gutsound = I.listen()
 		if(gutsound)
 			sounds += gutsound
 	if(!sounds.len)

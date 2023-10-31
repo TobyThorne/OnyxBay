@@ -313,7 +313,7 @@
 	else if(breath.temperature <= species.cold_discomfort_level)
 		species.get_environment_discomfort(owner,"cold")
 
-/obj/item/organ/internal/lungs/stethoscope_results()
+/obj/item/organ/internal/lungs/listen()
 	if(owner.failed_last_breath || !active_breathing)
 		return "no respiration"
 
