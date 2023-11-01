@@ -18,6 +18,7 @@ var/list/organ_cache = list()
 	)
 	var/list/default_conditions = list() // Contains OROCON IDs
 	var/list/conditions = list()
+	var/list/active_conditions = list() // Thinking conditions
 
 	var/efficiency = 1.0
 
@@ -81,7 +82,8 @@ var/list/organ_cache = list()
 	owner = null
 	dna = null
 	QDEL_NULL(food_organ)
-	QDEL_LIST(conditions)
+	QDEL_NULL_LIST(conditions)
+	active_conditions.Cut()
 	capacities.Cut()
 	return ..()
 
@@ -89,6 +91,7 @@ var/list/organ_cache = list()
 	if(!condition_id || !(condition_id in GLOB.organ_conditions))
 		return FALSE
 	conditions[condition_id] = new GLOB.organ_conditions[condition_id]()
+	active_conditions.Add(conditions[condition_id])
 	if(update_conditions)
 		update_conditions()
 	return TRUE
@@ -96,6 +99,7 @@ var/list/organ_cache = list()
 /obj/item/organ/proc/remove_condition(var/condition_id, update_conditions = TRUE)
 	if(!condition_id || !(condition_id in GLOB.organ_conditions) || !conditions[condition_id])
 		return FALSE
+	active_conditions.Remove(conditions[conditions_id])
 	qdel(conditions[conditions_id])
 	conditions.Remove(conditions_id)
 	if(update_conditions)
@@ -157,8 +161,7 @@ var/list/organ_cache = list()
 			if(NEXT_THINK)
 				set_next_think(world.time + 1 SECOND)
 			return
-
-	if(!owner)
+	else
 		if(reagents && !is_preserved())
 			var/datum/reagent/blood/B = locate(/datum/reagent/blood) in reagents.reagent_list
 			if(B && prob(40))
