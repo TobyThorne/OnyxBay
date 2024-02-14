@@ -18,7 +18,8 @@
 	var/burn_point = null
 	var/burning = null
 	var/hitsound = SFX_FIGHTING_SWING
-	var/slot_flags = 0		//This is used to determine on which slots an item can fit.
+	var/slot_flags = 0 // This is used to determine on which slots an item can fit.
+	var/pocketability = POCKETABILITY_NORMAL
 	var/no_attack_log = 0			//If it's an item we don't want to log attack_logs with, set this to 1
 	pass_flags = PASS_FLAG_TABLE
 //	causeerrorheresoifixthis
@@ -464,9 +465,9 @@ var/list/global/slot_flags_enumeration = list(
 				if(!disable_warning)
 					to_chat(H, SPAN("warning", "You need a jumpsuit before you can attach this [name]."))
 				return 0
-			if(slot_flags & SLOT_DENYPOCKET)
+			if(pocketability == POCKETABILITY_DENY)
 				return 0
-			if( w_class > ITEM_SIZE_SMALL && !(slot_flags & SLOT_POCKET) )
+			if(w_class > ITEM_SIZE_SMALL && pocketability != POCKETABILITY_FORCE)
 				return 0
 			if(get_storage_cost() == ITEM_SIZE_NO_CONTAINER)
 				return 0 //pockets act like storage and should respect ITEM_SIZE_NO_CONTAINER. Suit storage might be fine as is

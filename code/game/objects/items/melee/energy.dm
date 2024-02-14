@@ -29,7 +29,7 @@
 	throwforce = active_throwforce
 	sharp = 0
 	edge = 1
-	slot_flags |= SLOT_DENYPOCKET
+	pocketability = POCKETABILITY_DENY
 	mod_handy = mod_handy_a
 	mod_weight = mod_weight_a
 	mod_reach = mod_reach_a
@@ -47,7 +47,7 @@
 	throwforce = initial(throwforce)
 	sharp = initial(sharp)
 	edge = initial(edge)
-	slot_flags = initial(slot_flags)
+	pocketability = initial(pocketability)
 	mod_handy = initial(mod_handy)
 	mod_weight = initial(mod_weight)
 	mod_reach = initial(mod_reach)

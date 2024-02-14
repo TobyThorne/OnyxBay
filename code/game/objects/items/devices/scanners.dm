@@ -410,7 +410,7 @@ REAGENT SCANNER
 	icon_state = "health_adv"
 	item_state = "analyzer"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	slot_flags = SLOT_POCKET
+	slot_flags = 0
 	throwforce = 3
 	w_class = ITEM_SIZE_SMALL
 	throw_range = 10

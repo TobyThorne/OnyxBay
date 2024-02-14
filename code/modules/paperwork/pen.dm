@@ -243,7 +243,7 @@
 /obj/item/pen/energy_dagger/proc/activate(mob/living/user)
 	battlepen = TRUE
 	to_chat(user, SPAN("notice", "\The [src] is now energised."))
-	slot_flags |= SLOT_DENYPOCKET
+	pocketability = POCKETABILITY_DENY
 	name = "energy dagger"
 	desc = "Bureaucracy has never ever been so deadly."
 	force = active_force
@@ -256,7 +256,7 @@
 /obj/item/pen/energy_dagger/proc/deactivate(mob/living/user)
 	battlepen = FALSE
 	to_chat(user, SPAN("notice", "\The [src] deactivates!"))
-	slot_flags = initial(slot_flags)
+	pocketability = initial(pocketability)
 	name = initial(name)
 	desc = initial(desc)
 	force = initial(force)
