@@ -3060,6 +3060,8 @@
 #include "maps\exodus\exodus.dm"
 #include "maps\exodus\exodus_define.dm"
 #include "maps\exodus\exodus_levels.dm"
+#include "maps\exodus_plus\exodus_plus_define.dm"
+#include "maps\exodus_plus\exodus_plus_levels.dm"
 #include "maps\frontier\ent_biodome.dm"
 #include "maps\frontier\frontier_areas.dm"
 #include "maps\frontier\frontier_define.dm"
